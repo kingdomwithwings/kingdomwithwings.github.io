@@ -1,0 +1,264 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="utf-8"/>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+	<title>Gallery</title>
+
+	<link href="https://fonts.googleapis.com/css?family=Raleway" rel="stylesheet">
+	<script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.js"></script>
+	<script src="hammer.min.js"></script>
+	<script src="vibrant.min.js"></script>
+	<style>
+		body {
+			background-color: #fff;
+			margin: 0;
+			overflow: hidden;
+			font-family: 'Raleway', sans-serif;
+		}
+		#topColor {
+			width: 100%;
+			height: 35vh;
+			background: #CAD9DF;
+			transition: background .7s .5s;
+		}
+		#header {
+			text-align: center;
+		}
+			#header #title {
+				font-size: 3em;
+			}
+			#header #date {
+				color: #aaa;
+				font-size: 1em;
+				margin-top: .5em;
+			}
+		#galleryBody {
+			height: 50vh;
+			max-width: 800px;
+			margin: calc(-35vh + 20px) auto 40px;
+			position: relative;
+			/*border: 1px solid;*/
+		}
+			#galleryBody div {
+				width: 100%;
+				height: 100%;
+				position: absolute;
+				left: 0;
+				top: 0;
+				transition: all .3s;
+				text-align: center;
+				line-height: 50vh;
+				/*border: 1px solid;*/
+			}
+			#galleryBody div img {
+				max-height: 100%;
+				max-width: calc(100% - 40px);
+				vertical-align: middle;
+				border-radius: 20px;
+				-webkit-box-shadow: 0 10px 20px rgba(0, 0, 0, 0.18);
+				box-shadow: 0 20px 30px -15px rgba(0, 0, 0, 0.3);
+				pointer-events: none;
+			}
+		#contentBody {
+			display: none;
+		}
+		#dotsWrapper {
+			position: absolute;
+			bottom: 20px;
+			left: 50%;
+			transform: translateX(-50%);
+			text-align: center;
+			width: 100%;
+		}
+			#dotsWrapper div {
+				background: #EAEAEA;
+				width: 14px;
+				height: 14px;
+				margin: 0 7px;
+				border-radius: 50%;
+				display: inline-block;
+				transition: all .3s;
+				transform: scale(.6);
+			}
+			#dotsWrapper div.active {
+				background: #000;
+				transform: scale(1);
+			}
+	</style>
+</head>
+<body>
+
+	<div id="container">
+		<div id="topColor"></div>
+		<div id="galleryBody">
+		</div>
+		<div id="contentBody">
+			<h1>
+				Hey guys
+			</h1>
+			<p>
+				Hey guys
+			</p>
+			<p>
+				<img src="img/EDCF0970.jpg" style="width: 300px;" class="fr-fic fr-dib">
+				<img src="img/EDCF1073.jpg" style="width: 300px;" class="fr-fic fr-dib">
+				<img src="img/EDCF1024.jpg" style="width: 300px;" class="fr-fic fr-dib">
+				<img src="img/EDCF0989.jpg" style="width: 300px;" class="fr-fic fr-dib">
+				<img src="img/EDCF1296.jpg" style="width: 300px;" class="fr-fic fr-dib">
+				<img src="img/EDCF0978.jpg" style="width: 300px;" class="fr-fic fr-dib">
+				<img src="img/EDCF1142.jpg" style="width: 300px;" class="fr-fic fr-dib">
+			</p>
+		</div>
+		<div id="header">
+			<div id="title">Breckenridge highlights!</div>
+			<div id="date">Friday, March 30, 2018</div>
+		</div>
+		<div id="dotsWrapper"></div>
+	</div>
+
+
+	<script type="text/javascript">
+
+		var imageColors = [];
+		$(window).on("load", function() {
+			$('#dot-0').addClass('active');
+			$('#topColor').css('background-color', imageColors[0]);
+
+			// console.log(imageColors[0]);
+		});
+
+		$(function(){
+		// $(document).ready(function() {
+			$('#contentBody img').appendTo('#galleryBody')
+			$('#galleryBody img').removeAttr('style').wrap( '<div class="pane"></div>').each(function( index ) {
+  			$('#dotsWrapper').append('<div id="dot-'+ index +'"></div>')
+			}).load(function(){
+
+				// messy, needs cleaned up later
+				var img = document.createElement('img');
+				img.setAttribute('src', $(this).attr('src'))
+				var vibrant = new Vibrant(img);
+				var mutedColor = vibrant.swatches()['Muted'].getHex();
+				// console.log(mutedColor);
+				imageColors.push(mutedColor);
+				console.log(imageColors[0]);
+			});
+
+
+
+				var reqAnimationFrame = (function() {
+            return window[Hammer.prefixed(window, "requestAnimationFrame")] || function(callback) {
+                setTimeout(callback, 1000 / 60);
+            }
+        })();
+
+        function dirProp(direction, hProp, vProp) {
+            return (direction & Hammer.DIRECTION_HORIZONTAL) ? hProp : vProp
+        }
+
+
+        /**
+         * Carousel
+         * @param container
+         * @param direction
+         * @constructor
+         */
+        function HammerCarousel(container, direction) {
+            this.container = container;
+            this.direction = direction;
+
+            this.panes = Array.prototype.slice.call(this.container.children, 0);
+            this.containerSize = this.container[dirProp(direction, 'offsetWidth', 'offsetHeight')];
+
+            this.currentIndex = 0;
+
+            this.hammer = new Hammer.Manager(this.container);
+            this.hammer.add(new Hammer.Pan({ direction: this.direction, threshold: 10 }));
+            this.hammer.on("panleft panright tap press panstart panmove panend pancancel", Hammer.bindFn(this.onPan, this));
+
+            this.show(this.currentIndex);
+        }
+
+
+        HammerCarousel.prototype = {
+            /**
+             * show a pane
+             * @param {Number} showIndex
+             * @param {Number} [percent] percentage visible
+             * @param {Boolean} [animate]
+             */
+            show: function(showIndex, percent, animate){
+                showIndex = Math.max(0, Math.min(showIndex, this.panes.length - 1));
+                percent = percent || 0;
+
+                var className = this.container.className;
+                if(animate) {
+                    if(className.indexOf('animate') === -1) {
+                        this.container.className += ' animate';
+                        $('#dotsWrapper div').removeClass('active')
+                        $('#dot-'+ showIndex).addClass('active')
+                        $('#topColor').css('background-color', imageColors[showIndex]);
+                        // console.log('asdfas');
+                    }
+                } else {
+                    if(className.indexOf('animate') !== -1) {
+                        this.container.className = className.replace('animate', '').trim();
+                    }
+                }
+
+                var paneIndex, pos, translate;
+                for (paneIndex = 0; paneIndex < this.panes.length; paneIndex++) {
+                    pos = (this.containerSize / 100) * (((paneIndex - showIndex) * 100) + percent);
+                    if(this.direction & Hammer.DIRECTION_HORIZONTAL) {
+                        translate = 'translate3d(' + pos + 'px, 0, 0)';
+                    } else {
+                        translate = 'translate3d(0, ' + pos + 'px, 0)'
+                    }
+                     this.panes[paneIndex].style.transform = translate;
+                     this.panes[paneIndex].style.mozTransform = translate;
+                     this.panes[paneIndex].style.webkitTransform = translate;
+                }
+
+                this.currentIndex = showIndex;
+            },
+
+            /**
+             * handle pan
+             * @param {Object} ev
+             */
+            onPan : function (ev) {
+                var delta = dirProp(this.direction, ev.deltaX, ev.deltaY);
+                var percent = (100 / this.containerSize) * delta;
+                var animate = false;
+
+                if (ev.type == 'panend' || ev.type == 'pancancel') {
+                    if (Math.abs(percent) > 20 && ev.type == 'panend') {
+                        this.currentIndex += (percent < 0) ? 1 : -1;
+                    }
+                    percent = 0;
+                    animate = true;
+                }
+
+                this.show(this.currentIndex, percent, animate);
+            }
+        };
+
+        // the horizontal pane scroller
+        var outer = new HammerCarousel(document.querySelector("#galleryBody"), Hammer.DIRECTION_HORIZONTAL);
+
+        // each pane should contain a vertical pane scroller
+        Hammer.each(document.querySelectorAll(".pane"), function(container) {
+            // setup the inner scroller
+            var inner = new HammerCarousel(container, Hammer.DIRECTION_VERTICAL);
+
+            // only recognize the inner pan when the outer is failing.
+            // they both have a threshold of some px
+            outer.hammer.get('pan').requireFailure(inner.hammer.get('pan'));
+        });
+
+		});
+
+	</script>
+</body>
+</html>
