@@ -15,7 +15,8 @@
     }
     body {
       position: relative;
-      height: 100vh;
+      /*height: 100vh;*/
+      /*min-height: calc(100% - 0)*/
 			background-color: #fff;
 			margin: 0;
 			font-family: 'Raleway', sans-serif;
@@ -115,7 +116,7 @@
 			</p>
 		</div>
 		<div id="header">
-			<div id="title">Breckenridge highlights!</div>
+			<div id="title">1Breckenridge highlights!</div>
 			<div id="date">Friday, March 30, 2018</div>
 		</div>
 		<div id="dotsWrapper"></div>
@@ -128,6 +129,8 @@
 		$(window).on("load", function() {
 			$('#dot-0').addClass('active');
 			$('#topColor').css('background-color', imageColors[0]);
+      var setWindowHeight = $( window ).height();
+      $('body').height(setWindowHeight);
 
 			// console.log(imageColors[0]);
 		});
