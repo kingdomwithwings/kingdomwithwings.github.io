@@ -1,0 +1,286 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Story</title>
+
+  <link href="https://fonts.googleapis.com/css?family=Playfair+Display" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.js"></script>
+  <script src="hammer.min.js"></script>
+  <style>
+    html, body {
+      overflow: hidden;
+    }
+    body {
+      position: relative;
+      /*height: 100vh;*/
+      /*min-height: calc(100% - 0)*/
+      background-color: #fff;
+      margin: 0;
+      font-family: 'Playfair Display', sans-serif;
+    }
+    #header {
+      display: none;
+    }
+    #container {
+      position: relative;
+    }
+    #storyBody {
+      height: 100%;
+      width: 100%;
+      position: relative;
+      /*border*/: 1px solid;
+    }
+      #storyBody div.pane {
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        left: 0;
+        top: 0;
+        transition: all .3s;
+        text-align: center;
+        /*border: 1px solid;*/
+      }
+        #storyBody div.pane div.inner {
+          /*border: 1px solid;*/
+          margin-top: 50vh; /* This may cause issues with mobile */
+          transform: translateY(-50%);
+        }
+        div.inner.huge {
+          font-size: 4em;
+        }
+        div.inner.large {
+          font-size: 3em;
+          margin-left: 5vw;
+          margin-right: 5vw;
+        }
+        div.inner.medium {
+          font-size: 2em;
+          margin-left: 10vw;
+          margin-right: 10vw;
+        }
+        div.inner.small {
+          font-size: 1em;
+          margin-left: 10vw;
+          margin-right: 10vw;
+        }
+        div.pane.hasImg {
+          background: #fff no-repeat fixed center;
+          background-size: cover;
+          color: #fff;
+        }
+          div.pane.hasImg .grayOut {
+            position: absolute;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: #000;
+            opacity: .5;
+            z-index: -1;
+          }
+    #contentBody {
+      display: none;
+    }
+    #dotsWrapper {
+      position: absolute;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      text-align: center;
+      width: 100%;
+    }
+      #dotsWrapper div {
+        background: rgba(127,127,127, 0.5);
+        width: 14px;
+        height: 14px;
+        margin: 0 7px;
+        border-radius: 50%;
+        display: inline-block;
+        transition: all .3s;
+        transform: scale(.5);
+        border: 2px solid transparent;
+      }
+      #dotsWrapper div.active {
+        background: #000;
+        transform: scale(1);
+        border-color: #fff;
+      }
+  </style>
+</head>
+<body>
+
+  <div id="container">
+    <div id="storyBody">
+    </div>
+    <div id="contentBody">
+      <p>We achieve more when we chase the dream instead of the competition.</p><hr><p>If the challenge we face doesn't scare us, then it's probably not that important.</p><hr><p>Excitement comes from the achievement. Fulfillment comes from the journey that got you there.</p><hr><p>-Simon Sinek</p>
+    </div>
+    <div id="header">
+      <div id="headerImg"><img src="https://d3aha4gc4nttco.cloudfront.net/public/programs/internal_content_images/176/02860d43-5f12-44b5-b6b1-51597980be20.jpg?scbust=fa564738595d7fcda900ac71dc368cd5" id="background" class="fade-in anim-1 delay-1"/></div>
+      <div id="title">Together is better</div>
+      <div id="date">Friday, March 30, 2018</div>
+    </div>
+    <div id="dotsWrapper"></div>
+  </div>
+
+
+  <script type="text/javascript">
+
+    var storePanes = []
+
+
+    $(window).on("load", function() {
+      $('#dot-0').addClass('active');
+      var setWindowHeight = $( window ).height();
+      $('body, #storyBody, .pane').height(setWindowHeight);
+
+      // console.log(imageColors[0]);
+    });
+    $(function(){
+
+      /*---[  Create the story array  ]--*/
+      storePanes.push($('#title').html())
+      storePanes = storePanes.concat($('#contentBody').html().split('<hr>'))
+      for (i = 0;storePanes[i]; i++) {
+        storePanes[i] = storePanes[i].trim().replace(/<[^>]+>/ig,"");
+      }
+      console.log(storePanes)
+
+      /*---[  Build DOM  ]--*/
+      for (i = 0;storePanes[i]; i++) {
+        var textSize = storePanes[i].length
+        console.log(textSize)
+        switch(true) {
+          case (textSize > 0 && textSize < 20):
+            textSize = 'huge';
+            break;
+          case (textSize > 20 && textSize < 70):
+            textSize = 'large';
+            break;
+          case (textSize > 70 && textSize < 150):
+            textSize = 'medium';
+            break;
+          case (textSize > 150):
+            textSize = 'small';
+            break;
+        }
+        $('#storyBody').append('<div class="pane"><div class="inner '+ textSize +'">'+ storePanes[i] +'</div><div class="grayOut"></div></div>')
+        $('#dotsWrapper').append('<div id="dot-'+ i +'"></div>')
+      }
+      // $('#storyBody:first-child').css('background-image',$('#headerImg img').attr('src'))
+
+      $('#storyBody .pane:first-child').addClass('coverStory hasImg').css('background-image','url('+ $('#headerImg img').attr('src') +')')
+
+      console.log($('#headerImg img').attr('src'))
+
+
+
+      // each(function(){
+      //   storePanes.push($(this))
+      // });
+
+      //.appendTo('#galleryBody')
+      // $('#galleryBody img').removeAttr('style').wrap( '<div class="pane"></div>').each(function( index ) {
+      //   $('#dotsWrapper').append('<div id="dot-'+ index +'"></div>')
+      // });
+
+
+
+        function dirProp(direction, hProp, vProp) {
+            return (direction & Hammer.DIRECTION_HORIZONTAL) ? hProp : vProp
+        }
+
+        /**
+         * Carousel
+         * @param container
+         * @param direction
+         * @constructor
+         */
+        function HammerCarousel(container, direction) {
+            this.container = container;
+            this.direction = direction;
+
+            this.panes = Array.prototype.slice.call(this.container.children, 0);
+            this.containerSize = this.container[dirProp(direction, 'offsetWidth', 'offsetHeight')];
+
+            this.currentIndex = 0;
+
+            this.hammer = new Hammer.Manager(this.container);
+            this.hammer.add(new Hammer.Pan({ direction: this.direction, threshold: 10 }));
+            this.hammer.on("panleft panright tap press panstart panmove panend pancancel", Hammer.bindFn(this.onPan, this));
+
+            this.show(this.currentIndex);
+        }
+
+
+        HammerCarousel.prototype = {
+            /**
+             * show a pane
+             * @param {Number} showIndex
+             * @param {Number} [percent] percentage visible
+             * @param {Boolean} [animate]
+             */
+            show: function(showIndex, percent, animate){
+                showIndex = Math.max(0, Math.min(showIndex, this.panes.length - 1));
+                percent = percent || 0;
+
+                var className = this.container.className;
+                if(animate) {
+                    if(className.indexOf('animate') === -1) {
+                        this.container.className += ' animate';
+                        $('#dotsWrapper div').removeClass('active')
+                        $('#dot-'+ showIndex).addClass('active')
+                        // console.log('asdfas');
+                    }
+                } else {
+                    if(className.indexOf('animate') !== -1) {
+                        this.container.className = className.replace('animate', '').trim();
+                    }
+                }
+
+                var paneIndex, pos, translate;
+                for (paneIndex = 0; paneIndex < this.panes.length; paneIndex++) {
+                    pos = (this.containerSize / 100) * (((paneIndex - showIndex) * 100) + percent);
+                    if(this.direction & Hammer.DIRECTION_HORIZONTAL) {
+                        translate = 'translate3d(' + pos + 'px, 0, 0)';
+                    } else {
+                        translate = 'translate3d(0, ' + pos + 'px, 0)'
+                    }
+                     this.panes[paneIndex].style.transform = translate;
+                     this.panes[paneIndex].style.mozTransform = translate;
+                     this.panes[paneIndex].style.webkitTransform = translate;
+                }
+
+                this.currentIndex = showIndex;
+            },
+
+            /**
+             * handle pan
+             * @param {Object} ev
+             */
+            onPan : function (ev) {
+                var delta = dirProp(this.direction, ev.deltaX, ev.deltaY);
+                var percent = (100 / this.containerSize) * delta;
+                var animate = false;
+
+                if (ev.type == 'panend' || ev.type == 'pancancel') {
+                    if (Math.abs(percent) > 20 && ev.type == 'panend') {
+                        this.currentIndex += (percent < 0) ? 1 : -1;
+                    }
+                    percent = 0;
+                    animate = true;
+                }
+
+                this.show(this.currentIndex, percent, animate);
+            }
+        };
+
+        // the horizontal pane scroller
+        new HammerCarousel(document.querySelector("#storyBody"), Hammer.DIRECTION_HORIZONTAL);
+
+    });
+
+  </script>
+</body>
+</html>
