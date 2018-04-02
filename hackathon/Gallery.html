@@ -245,17 +245,7 @@
         };
 
         // the horizontal pane scroller
-        var outer = new HammerCarousel(document.querySelector("#galleryBody"), Hammer.DIRECTION_HORIZONTAL);
-
-        // each pane should contain a vertical pane scroller
-        Hammer.each(document.querySelectorAll(".pane"), function(container) {
-            // setup the inner scroller
-            var inner = new HammerCarousel(container, Hammer.DIRECTION_VERTICAL);
-
-            // only recognize the inner pan when the outer is failing.
-            // they both have a threshold of some px
-            outer.hammer.get('pan').requireFailure(inner.hammer.get('pan'));
-        });
+        new HammerCarousel(document.querySelector("#galleryBody"), Hammer.DIRECTION_HORIZONTAL);
 
 		});
 
