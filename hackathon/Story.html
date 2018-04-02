@@ -44,14 +44,14 @@
       }
         #storyBody div.pane div.inner {
           /*border: 1px solid;*/
-          margin-top: calc(50vh - 100px); /* This may cause issues with mobile */
+          margin-top: calc(50vh - 80px); /* This may cause issues with mobile */
           transform: translateY(-50%);
         }
         div.inner.huge {
-          font-size: 4em;
+          font-size: 16vw;
         }
         div.inner.large {
-          font-size: 3em;
+          font-size: 10vw;
           margin-left: 5vw;
           margin-right: 5vw;
         }
@@ -114,7 +114,9 @@
     <div id="storyBody">
     </div>
     <div id="contentBody">
-      <p>We achieve more when we chase the dream instead of the competition.</p><hr><p>If the challenge we face doesn't scare us, then it's probably not that important.</p><hr><p>Excitement comes from the achievement. Fulfillment comes from the journey that got you there.</p><hr><p>-Simon Sinek</p>
+      <p>We achieve more when we chase the dream instead of the competition.</p><hr><p>If the challenge we face doesn't scare us, then it's probably not that important.</p><hr><p>Excitement comes from the achievement. Fulfillment comes from the journey that got you there.</p><hr>
+      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer tincidunt et ligula quis vehicula. Nullam odio sapien, blandit quis pharetra in, rutrum ut justo. Maecenas rutrum ipsum eu tellus gravida, nec ullamcorper diam vestibulum. Curabitur a libero volutpat, accumsan elit quis, facilisis tellus. Quisque viverra non est ut egestas. Nam sit amet urna sed enim auctor rhoncus vel scelerisque nibh. Aliquam erat volutpat. Donec tristique augue sed massa molestie placerat.</p><hr>
+      <p>-Simon Sinek</p>
     </div>
     <div id="header">
       <div id="headerImg"><img src="https://d3aha4gc4nttco.cloudfront.net/public/programs/internal_content_images/176/02860d43-5f12-44b5-b6b1-51597980be20.jpg?scbust=fa564738595d7fcda900ac71dc368cd5" id="background" class="fade-in anim-1 delay-1"/></div>
@@ -136,6 +138,9 @@
       $('body, #storyBody, .pane').height(setWindowHeight);
 
       // console.log(imageColors[0]);
+    }).resize(function() {
+      var setWindowHeight = $( window ).height();
+      $('body, #storyBody, .pane').height(setWindowHeight);
     });
     $(function(){
 
