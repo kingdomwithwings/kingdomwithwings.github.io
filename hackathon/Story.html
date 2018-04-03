@@ -4,6 +4,12 @@
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Story</title>
+  <!--
+    * % Loading animation
+    * Android half scrolling bug
+    * Better dynamic text sizing
+    * Web/desktop version
+  -->
 
   <link href="https://fonts.googleapis.com/css?family=Playfair+Display" rel="stylesheet">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.js"></script>
@@ -142,6 +148,7 @@
       var setWindowHeight = $( window ).height();
       $('body, #storyBody, .pane').height(setWindowHeight);
     });
+
     $(function(){
 
       /*---[  Create the story array  ]--*/
